@@ -163,7 +163,7 @@ class GestionMedicaApp:
             else:
                 messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
         boton_registrar = tk.Button(ventana, text="  Registrar Paciente", command=add_paciente, bg="white",
-                                    fg="#3C372B", font=("Montserrat", 15, "bold italic"), width=225, height=25,
+                                    fg="#3C372B", font=("Montserrat", 10, "bold italic"), width=225, height=25,
                                     compound="left", image=self.imagen_paciente)
         boton_registrar.grid(row=5, column=3, pady=5)
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
@@ -515,7 +515,7 @@ class GestionMedicaApp:
         boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
     def abrir_ventana_ver_doctor(self):
         ventana = Toplevel(self.root)
-        ventana.title("Eliminar Doctor")
+        ventana.title("Ver Doctor")
         ventana.config(bg="#119DA4")
         self.centrar_ventana(ventana, 1000, 500)
 
