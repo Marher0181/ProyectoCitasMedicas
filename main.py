@@ -740,7 +740,7 @@ class GestionMedicaApp:
         label.pack(pady=10)
         self.centrar_ventana(ventana, 600, 500)
 
-        button1 = tk.Button(ventana, text="  Agregar Tratamiento", command=self.abrir_ventana_registrar_especialidad, bg="white", fg="#3C372B",
+        button1 = tk.Button(ventana, text="  Agregar Tratamiento", command=self.abrir_ventana_registrar_tratamiento, bg="white", fg="#3C372B",
                             font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_agregar)
         button2 = tk.Button(ventana, text="  Eliminar Tratamiento", command=self.abrir_ventana_eliminar_tratamiento, bg="white", fg="#3C372B",
@@ -749,7 +749,7 @@ class GestionMedicaApp:
         button3 = tk.Button(ventana, text="  Listar Tratamientos", command=self.abrir_ventana_ver_tratamiento, bg="white", fg="#3C372B",
                             font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_listar)
-        button4 = tk.Button(ventana, text="  Modificar Tratamiento", command=self.abrir_ventana_modificar_especialidad, bg="white", fg="#3C372B",
+        button4 = tk.Button(ventana, text="  Modificar Tratamiento", command=self.abrir_ventana_modificar_tratamiento, bg="white", fg="#3C372B",
                             font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_listar)
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white", width=35, height=35,
@@ -780,8 +780,53 @@ class GestionMedicaApp:
             if nombre:
                 try:
                     self.db.cursor.execute(
-                        "EXEC sp_GestionarTratamiento @nombreTratamiento = ?",
+                        "EXEC sp_GestionarTratamiento @idTratamiento = null,  @nombreTratamiento = ?",
                         (nombre))
+                    self.db.cursor.commit()
+                    messagebox.showinfo("Éxito", "Tratamiento agregado exitosamente.")
+                except Exception as e:
+                    messagebox.showerror("Error", f"Error al agregar tratamiento: {e}")
+            else:
+                messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
+
+        boton_registrar = tk.Button(ventana, text="   Registrar Tratamiento", command=add_tra, bg="white", fg="#3C372B",
+                                    font=("Montserrat", 20, "bold italic"), width=325, height=30, compound="left", image=self.imagen_tratamiento)
+        boton_registrar.grid(row=5, column=1)
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+
+    def abrir_ventana_modificar_tratamiento(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Modificar Tratamiento")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 750, 175)
+
+        label_id = tk.Label(ventana, text="ID del Tratamiento:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_id.grid(row=0, column=0, padx=10, pady=10)
+
+        entry_id = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_id.grid(row=0, column=1, padx=5)
+
+        label_nombre = tk.Label(ventana, text="Nombre del Tratamiento:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_nombre.grid(row=1, column=0, padx=10, pady=10)
+
+        entry_nombre = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_nombre.grid(row=1, column=1, padx=5)
+
+        def add_tra():
+            nombre = entry_nombre.get()
+            id = entry_id.get()
+
+            if nombre and id:
+                try:
+                    self.db.cursor.execute(
+                        "EXEC sp_GestionarTratamiento @idTratamiento = ?,  @nombreTratamiento = ?",
+                        (id, nombre))
                     self.db.cursor.commit()
                     messagebox.showinfo("Éxito", "Tratamiento agregado exitosamente.")
                 except Exception as e:
@@ -800,7 +845,7 @@ class GestionMedicaApp:
 
     def abrir_ventana_ver_tratamiento(self):
         ventana = Toplevel(self.root)
-        ventana.title("Ver Especialidades")
+        ventana.title("Ver Tratamiento")
         ventana.config(bg="#119DA4")
         self.centrar_ventana(ventana, 1124, 500)
 
@@ -810,11 +855,11 @@ class GestionMedicaApp:
         datostemp = []
         if datos != []:
             for dato in datos:
-                dato = f"{dato.get_idTratamiento()}.- Especialidad: {dato.get_nombreTratamiento()}"
+                dato = f"{dato.get_idTratamiento()}.- Tratamiento: {dato.get_nombreTratamiento()}"
                 listbox.insert(tk.END, dato)
                 datostemp.append(dato)
         else:
-            listbox.insert(tk.END, "No hay Especialidades para mostrar")
+            listbox.insert(tk.END, "No hay Tratamientos para mostrar")
 
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
                                    fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
@@ -851,6 +896,7 @@ class GestionMedicaApp:
                         dato = datostemp[idx]
                         dato = dato.split(",")
                         id = dato[0]
+                        print(id)
 
                 self.db.cursor.execute("EXEC sp_GestionarTratamiento @idTratamiento = ?, @nombreTratamiento = null", (id))
                 self.db.conn.commit()
@@ -1084,7 +1130,7 @@ class GestionMedicaApp:
         datostemp = []
         if datos != []:
             for dato in datos:
-                dato = f"El Paciente: {dato.get_idPaciente()}, tiene su cita el día: {dato.get_fechaCita()}, con El/la Dr(a): {dato.get_idDoctor()}"
+                dato = f"{dato.get_idCita()}, El Paciente: {dato.get_idPaciente()}, tiene su cita el día: {dato.get_fechaCita()}, con El/la Dr(a): {dato.get_idDoctor()}"
                 listbox.insert(tk.END, dato)
                 datostemp.append(dato)
         else:
