@@ -119,7 +119,7 @@ class GestionMedicaApp:
         entry_edad.config(width=25)
         entry_edad.grid(row=1, column=1, padx=5)
 
-        label_contacto = tk.Label(ventana, text="Nombre del paciente:", bg="#119DA4", fg="#3C372B",
+        label_contacto = tk.Label(ventana, text="Contacto:", bg="#119DA4", fg="#3C372B",
                                 font=("Montserrat", 20, "bold italic"))
         label_contacto.grid(row=2, column=0)
 
@@ -127,7 +127,7 @@ class GestionMedicaApp:
         entry_contacto.config(width=25)
         entry_contacto.grid(row=2, column=1, padx=5)
 
-        label_direccion = tk.Label(ventana, text="Nombre del paciente:", bg="#119DA4", fg="#3C372B",
+        label_direccion = tk.Label(ventana, text="Direccion:", bg="#119DA4", fg="#3C372B",
                                 font=("Montserrat", 20, "bold italic"))
         label_direccion.grid(row=3, column=0)
 
@@ -135,11 +135,11 @@ class GestionMedicaApp:
         entry_direccion.config(width=25)
         entry_direccion.grid(row=3, column=1, padx=5)
 
-        def add_paciente(self):
-            nombre = self.entry_nombre.get()
-            edad = self.entry_edad.get()
-            contacto = self.entry_contacto.get()
-            direccion = self.entry_direccion.get()
+        def add_paciente():
+            nombre = entry_nombre.get()
+            edad = entry_edad.get()
+            contacto = entry_contacto.get()
+            direccion = entry_direccion.get()
 
             if nombre and edad and contacto and direccion:
                 try:
@@ -247,9 +247,9 @@ class GestionMedicaApp:
                         "EXEC sp_GestionarEspecialidad @nombreEspecialidad = ?, @descripcionEspecialidad = ?",
                         (nombre, des))
                     self.db.cursor.commit()
-                    messagebox.showinfo("Éxito", "Doctor agregado exitosamente.")
+                    messagebox.showinfo("Éxito", "Especialidad agregada exitosamente.")
                 except Exception as e:
-                    messagebox.showerror("Error", f"Error al agregar doctor: {e}")
+                    messagebox.showerror("Error", f"Error al agregar especialidad: {e}")
             else:
                 messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
 
@@ -283,9 +283,9 @@ class GestionMedicaApp:
                         "EXEC sp_GestionarTratamiento @nombreTratamiento = ?",
                         (nombre))
                     self.db.cursor.commit()
-                    messagebox.showinfo("Éxito", "Doctor agregado exitosamente.")
+                    messagebox.showinfo("Éxito", "Tratamiento agregado exitosamente.")
                 except Exception as e:
-                    messagebox.showerror("Error", f"Error al agregar doctor: {e}")
+                    messagebox.showerror("Error", f"Error al agregar tratamiento: {e}")
             else:
                 messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
 
@@ -315,7 +315,7 @@ class GestionMedicaApp:
         button3 = tk.Button(ventana, text="  Listar Citas", command=self.abrir_ventana_ver_cita, bg="white", fg="#3C372B",
                             font=("Times New Roman", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_listar)
-        button4 = tk.Button(ventana, text="  Modificar Cita1", command=self.abrir_ventana_modificar_cita, bg="white", fg="#3C372B",
+        button4 = tk.Button(ventana, text="  Modificar Cita", command=self.abrir_ventana_modificar_cita, bg="white", fg="#3C372B",
                             font=("Times New Roman", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_listar)
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white", width=35, height=35,
@@ -511,7 +511,6 @@ class GestionMedicaApp:
         datostemp = []
         if datos != []:
             for dato in datos:
-                print(dato)
                 dato = f"{dato}"
                 listbox.insert(tk.END, dato)
                 datostemp.append(dato)
@@ -523,13 +522,12 @@ class GestionMedicaApp:
             indice = listbox.curselection()
 
             if indice != ():
-                if messagebox.askokcancel("Advertencia ¿Desea devolver el libro?", message=", ".join(listbox.get(i) for i in indice)):
+                if messagebox.askokcancel("Advertencia ¿Desea eliminar la cita?", message=", ".join(listbox.get(i) for i in indice)):
                     datos = self.controlador_citas.obtener_citas()
                     for idx in indice:
                         dato = datostemp[idx]
                         dato.split(",")
                         id = dato[0]
-                        print(id)
 
                 self.db.cursor.execute("sp_GestionarCitas @idCita = ? , @idPaciente = null, @idDoctor = null, @idTratamiento = null, @fechaCita = null, @idEstado = null", (id))
                 self.db.conn.commit()
@@ -556,7 +554,6 @@ class GestionMedicaApp:
         datostemp = []
         if datos != []:
             for dato in datos:
-                print(dato)
                 dato = f"{dato}"
                 listbox.insert(tk.END, dato)
                 datostemp.append(dato)
