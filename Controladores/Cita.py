@@ -23,3 +23,11 @@ class ControladorCita:
         citas = [Cita(row.idCita, row.idPaciente, row.idDoctor, row.idTratamiento, row.fechaCreacion,
                             row.fechaCita, row.idEstado) for row in rows]
         return citas
+
+    def obtener_citas_historico(self, idPaciente):
+        cursor = self.db.cursor
+        cursor.execute("sp_GestionarCitasH  @idPaciente = ?", (idPaciente))
+        rows = cursor.fetchall()
+        citas = [Cita(row.idCita, row.idPaciente, row.idDoctor, row.idTratamiento, row.fechaCreacion,
+                            row.fechaCita, row.idEstado) for row in rows]
+        return citas

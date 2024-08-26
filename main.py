@@ -1,10 +1,9 @@
-
 import tkinter as tk
-from tkinter import messagebox, Toplevel, ttk, Listbox
-from tkcalendar import Calendar, DateEntry
+from tkinter import messagebox, Toplevel, ttk
+from tkcalendar import DateEntry
 from Models.Paciente import Paciente
 from Controladores import Doctor, Paciente, Cita
-from database import Database
+from DB.database import Database
 
 class GestionMedicaApp:
     def __init__(self, root, db):
@@ -36,23 +35,6 @@ class GestionMedicaApp:
     def create_widgets(self):
         self.menu_bar = tk.Menu(self.root)
 
-        self.menu_libros = tk.Menu(self.menu_bar, tearoff=0)
-        self.menu_libros.add_command(label="Agregar Libro", command=self.abrir_ventana_registrar_paciente)
-        self.menu_libros.add_command(label="Salir", command=self.salir_del_programa)
-        self.menu_libros.add_command(label="Eliminar Libro", command=self.abrir_ventana_registrar_paciente)
-        self.menu_libros.add_command(label="Buscar Libro", command=self.abrir_ventana_registrar_paciente)
-        self.menu_bar.add_cascade(label="Libros", menu=self.menu_libros)
-
-        self.menu_usuarios = tk.Menu(self.menu_bar, tearoff=0)
-        self.menu_usuarios.add_command(label="Registrar Usuario", command=self.abrir_ventana_registrar_paciente)
-        self.menu_usuarios.add_command(label="Eliminar Usuario", command=self.abrir_ventana_registrar_paciente)
-        self.menu_bar.add_cascade(label="Usuarios", menu=self.menu_usuarios)
-
-        self.menu_prestamos = tk.Menu(self.menu_bar, tearoff=0)
-        self.menu_prestamos.add_command(label="Prestar Libro", command=self.abrir_ventana_registrar_paciente)
-        self.menu_prestamos.add_command(label="Devolver Libro", command=self.abrir_ventana_registrar_paciente)
-        self.menu_bar.add_cascade(label="Préstamos", menu=self.menu_prestamos)
-
         self.menu_morosidad = tk.Menu(self.menu_bar, tearoff=0)
         self.menu_morosidad.add_command(label="Verificar Morosidad", command=self.abrir_ventana_registrar_paciente)
         self.menu_bar.add_cascade(label="Morosidad", menu=self.menu_morosidad)
@@ -72,19 +54,19 @@ class GestionMedicaApp:
                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                            image=self.imagen_cita)
         button.pack(pady=10)
-        buttonu = tk.Button(root, text="  Paciente", command=self.abrir_ventana_registrar_paciente, bg="white", fg="#3C372B",
+        buttonu = tk.Button(root, text="  Paciente", command=self.abrir_ventana_pacientes, bg="white", fg="#3C372B",
                             font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_paciente)
         buttonu.pack(pady=10)
-        buttonp = tk.Button(root, text="  Doctor", command=self.abrir_ventana_registrar_doctor, bg="white", fg="#3C372B",
+        buttonp = tk.Button(root, text="  Doctor", command=self.abrir_ventana_doctores, bg="white", fg="#3C372B",
                             font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_doctor)
         buttonp.pack(pady=10)
-        buttonm = tk.Button(root, text="  Especialidad", command=self.abrir_ventana_registrar_especialidad, bg="white", fg="#3C372B",
+        buttonm = tk.Button(root, text="  Especialidad", command=self.abrir_ventana_especialidad, bg="white", fg="#3C372B",
                             font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_especialidad)
         buttonm.pack(pady=10)
-        buttonm = tk.Button(root, text="  Tratamiento", command=self.abrir_ventana_registrar_tratamiento, bg="white", fg="#3C372B",
+        buttonm = tk.Button(root, text="  Tratamiento", command=self.abrir_ventana_tratamient, bg="white", fg="#3C372B",
                             font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_tratamiento)
         buttonm.pack(pady=10)
@@ -92,6 +74,39 @@ class GestionMedicaApp:
                             font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_salir)
         buttonm.pack(pady=10)
+
+
+    def abrir_ventana_pacientes(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Pacientes")
+        ventana.config(bg="#119DA4")
+        label = tk.Label(ventana, text="Pacientes", font=("Montserrat", 60, "bold italic"), fg="#3C372B",
+                         bg="#119DA4", compound="center")
+        label.pack(pady=10)
+        self.centrar_ventana(ventana, 500, 500)
+
+        button1 = tk.Button(ventana, text="  Agregar Paciente", command=self.abrir_ventana_registrar_paciente, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_agregar)
+        button2 = tk.Button(ventana, text="  Eliminar Paciente", command=self.abrir_ventana_eliminar_paciente, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_eliminar)
+        button3 = tk.Button(ventana, text="  Listar Pacientes", command=self.abrir_ventana_ver_paciente, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_listar)
+        button4 = tk.Button(ventana, text="  Modificar Paciente", command=self.abrir_ventana_modificar_paciente, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_listar)
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white", width=35, height=35,
+                                   compound="center", image=self.imagen_regresar)
+        button3.pack(pady=10)
+        button1.pack(pady=10)
+        button4.pack(pady=10)
+        button2.pack(pady=10)
+
+        boton_regresar.pack(pady=10, padx=10, anchor="se")
+
+
     def abrir_ventana_registrar_paciente(self):
         ventana = Toplevel(self.root)
         ventana.title("Registrar Paciente")
@@ -149,12 +164,183 @@ class GestionMedicaApp:
                 messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
         boton_registrar = tk.Button(ventana, text="  Registrar Paciente", command=add_paciente, bg="white",
                                     fg="#3C372B", font=("Montserrat", 15, "bold italic"), width=225, height=25,
-                                    compound="left", image=self.imagen_registrar_usuario)
+                                    compound="left", image=self.imagen_paciente)
         boton_registrar.grid(row=5, column=3, pady=5)
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
                                    fg="#3C372B", font=("Montserrat", 15, "bold italic"), width=25, height=25,
                                    compound="center", image=self.imagen_regresar)
         boton_regresar.grid(row=5, column=2, pady=10, padx=10, sticky="w")
+    def abrir_ventana_ver_paciente(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Ver Pacientes")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 1124, 500)
+
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"), relief="flat", bd=2)
+        listbox.grid(row=2, column=0, pady=5)
+        datos = self.controlador_paciente.obtener_paciente()
+        datostemp = []
+        if datos != []:
+            for dato in datos:
+                dato = f"Nombre: {dato.get_nombrePaciente()}, Contacto: {dato.get_contactoPaciente()}, Direccion: {dato.get_direccion()}"
+                listbox.insert(tk.END, dato)
+                datostemp.append(dato)
+        else:
+            listbox.insert(tk.END, "No hay citas para mostrar")
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+    def abrir_ventana_modificar_paciente(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Modificar Paciente")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 600, 280)
+
+        label_id = tk.Label(ventana, text="Id del paciente:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_id.grid(row=0, column=0)
+
+        entry_id = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_id.config(width=25)
+        entry_id.grid(row=0, column=1, padx=5)
+
+        label_nombre = tk.Label(ventana, text="Nombre del paciente:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_nombre.grid(row=1, column=0)
+
+        entry_nombre = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_nombre.config(width=25)
+        entry_nombre.grid(row=1, column=1, padx=5)
+
+        label_edad = tk.Label(ventana, text="Edad:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_edad.grid(row=2, column=0)
+
+        entry_edad = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_edad.config(width=25)
+        entry_edad.grid(row=2, column=1, padx=5)
+
+        label_contacto = tk.Label(ventana, text="Contacto:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_contacto.grid(row=3, column=0)
+
+        entry_contacto = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_contacto.config(width=25)
+        entry_contacto.grid(row=3, column=1, padx=5)
+
+        label_direccion = tk.Label(ventana, text="Direccion:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_direccion.grid(row=4, column=0)
+
+        entry_direccion = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_direccion.config(width=25)
+        entry_direccion.grid(row=4, column=1, padx=5)
+
+        def mod_pac():
+
+            if entry_id.get() and entry_nombre.get() and entry_edad.get() and entry_contacto.get() and entry_direccion.get():
+                try:
+                    self.db.cursor.execute(
+                        "EXEC sp_GestionPacientes  @idPaciente = ?, @nombrePaciente = ?, @edad = ?, @contactoPaciente = ?, @direccion = ?",
+                        (entry_id.get(), entry_nombre.get(),entry_edad.get(), entry_contacto.get(), entry_direccion.get()))
+                    self.db.cursor.commit()
+                    messagebox.showinfo("Éxito", "Paciente modificada exitosamente.")
+                except Exception as e:
+                    messagebox.showerror("Error", f"Error al modificar paciente: {e}")
+            else:
+                messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
+
+        boton_registrar = tk.Button(ventana, text="   Modificar Paciente", command=mod_pac, bg="white", fg="#3C372B",
+                                    font=("Montserrat", 12, "bold italic"), width=225, height=30, compound="left", image=self.imagen_cita)
+        boton_registrar.grid(row=5, column=1)
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+    def abrir_ventana_eliminar_paciente(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Eliminar Paciente")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 1124, 500)
+
+        label = tk.Label(ventana, text="Seleccione un paciente:", bg="#119DA4", fg="#3C372B",
+                         font=("Montserrat", 25, "bold italic"))
+        label.grid(row=0, column=0, pady=5)
+
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"), relief="flat", bd=2)
+        listbox.grid(row=2, column=0, pady=5)
+        datos = self.controlador_paciente.obtener_paciente()
+        datostemp = []
+        if datos != []:
+            for dato in datos:
+
+                dato = f"{dato.get_idPaciente()}, Paciente: {dato.get_nombrePaciente()}"
+                listbox.insert(tk.END, dato)
+                datostemp.append(dato)
+
+        else:
+            listbox.insert(tk.END, "No hay pacientes para mostrar")
+
+        def del_cita():
+
+            indice = listbox.curselection()
+
+            if indice != ():
+                if messagebox.askokcancel("Advertencia ¿Desea eliminar al paciente?", message=", ".join(listbox.get(i) for i in indice)):
+                    for idx in indice:
+                        dato = datostemp[idx]
+                        print(dato)
+                        id = int(dato[0])
+
+                self.db.cursor.execute("sp_GestionPacientes @idPaciente = ?, @nombrePaciente = null, @edad = null, @contactoPaciente = null, @direccion = null", (id))
+                self.db.conn.commit()
+                messagebox.showinfo("Éxito", "Paciente Eliminado Exitosamente.")
+                ventana.destroy()
+
+        boton_registrar = tk.Button(ventana, text="   Eliminar Paciente", command=del_cita, bg="white", fg="#3C372B",
+                                    font=("Montserrat", 20, "bold italic"), width=225, height=30, compound="left", image=self.imagen_eliminar)
+        boton_registrar.grid(row=5, column=0, pady=5)
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+
+
+
+
+    def abrir_ventana_doctores(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Doctores")
+        ventana.config(bg="#119DA4")
+        label = tk.Label(ventana, text="Doctores", font=("Montserrat", 60, "bold italic"), fg="#3C372B",
+                         bg="#119DA4", compound="center")
+        label.pack(pady=10)
+        self.centrar_ventana(ventana, 500, 500)
+
+        button1 = tk.Button(ventana, text="  Agregar Doctor", command=self.abrir_ventana_registrar_doctor, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_agregar)
+        button2 = tk.Button(ventana, text="  Eliminar Doctor", command=self.abrir_ventana_eliminar_doctor, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_eliminar)
+        button3 = tk.Button(ventana, text="  Listar Doctores", command=self.abrir_ventana_ver_doctor, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_listar)
+        button4 = tk.Button(ventana, text="  Modificar Doctores", command=self.abrir_ventana_modificar_doctor, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_listar)
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white", width=35, height=35,
+                                   compound="center", image=self.imagen_regresar)
+        button3.pack(pady=10)
+        button1.pack(pady=10)
+        button4.pack(pady=10)
+        button2.pack(pady=10)
+
+        boton_regresar.pack(pady=10, padx=10, anchor="se")
     def abrir_ventana_registrar_doctor(self):
         ventana = Toplevel(self.root)
         ventana.title("Registrar Doctor")
@@ -205,11 +391,244 @@ class GestionMedicaApp:
                 messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
 
         boton_registrar = tk.Button(ventana, text="   Registrar Doctor", command=add_doctor, bg="white", fg="#3C372B",
-                                    font=("Times New Roman", 20, "bold italic"), width=225, height=30, compound="left", image=self.imagen_doctor)
+                                    font=("Montserrat", 12, "bold italic"), width=225, height=30, compound="left", image=self.imagen_doctor)
         boton_registrar.grid(row=5, column=1)
 
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
-                                   fg="#3C372B", font=("Times New Roman", 20, "bold italic"), width=25, height=25,
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+    def abrir_ventana_modificar_doctor(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Modificar Doctor")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 650, 300)
+
+        label_id = tk.Label(ventana, text="ID del Doctor:" ,  bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_id.grid(row=0, column=0, padx=10, pady=10)
+
+        entry_id = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_id.grid(row=0, column=1, padx=5)
+
+        label_nombre = tk.Label(ventana, text="Nombre del Doctor:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_nombre.grid(row=1, column=0, padx=10, pady=10)
+
+        entry_nombre = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_nombre.grid(row=1, column=1, padx=5)
+
+        label_contacto = tk.Label(ventana, text="Contacto:", bg="#119DA4", fg="#3C372B",
+                                  font=("Montserrat", 20, "bold italic"))
+        label_contacto.grid(row=2, column=0, padx=10, pady=10)
+
+        entry_contacto = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_contacto.grid(row=2, column=1, padx=5)
+
+        label_especialidad = tk.Label(ventana, text="Especialidad:", bg="#119DA4", fg="#3C372B",
+                                      font=("Montserrat", 20, "bold italic"))
+        label_especialidad.grid(row=3, column=0, padx=10, pady=10)
+
+        combo_especialidad = ttk.Combobox(ventana, state="readonly", width=27, font=("Montserrat", 12, "italic"))
+        combo_especialidad.grid(row=3, column=1, padx=5)
+
+        especialidades = self.controlador_doctor.obtener_especialidades()
+        combo_especialidad['values'] = [es.get_nombreEspecialidad() for es in especialidades]
+        combo_especialidad.especialidades = especialidades
+
+        def add_doctor():
+            id = entry_id.get()
+            nombre = entry_nombre.get()
+            contacto = entry_contacto.get()
+            especialidad_nombre = combo_especialidad.get()
+            especialidad = next(
+                (es for es in combo_especialidad.especialidades if es.get_nombreEspecialidad() == especialidad_nombre),
+                None)
+
+            if nombre and especialidad and contacto and id:
+                try:
+                    self.db.cursor.execute(
+                        "EXEC sp_GestionarDoctores @idDoctor = ?,  @idEspecialidad = ?, @nombreDoctor = ?, @contacto = ?",
+                        (id, especialidad.get_idEspecialidad(), nombre, contacto))
+                    self.db.cursor.commit()
+                    messagebox.showinfo("Éxito", "Doctor modificado exitosamente.")
+                except Exception as e:
+                    messagebox.showerror("Error", f"Error al modificar doctor: {e}")
+            else:
+                messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
+
+        boton_registrar = tk.Button(ventana, text="   Modificar Doctor", command=add_doctor, bg="white", fg="#3C372B",
+                                    font=("Montserrat", 12, "bold italic"), width=225, height=30, compound="left",
+                                    image=self.imagen_doctor)
+        boton_registrar.grid(row=5, column=1)
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+    def abrir_ventana_eliminar_doctor(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Eliminar Doctor")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 1000, 500)
+
+        label = tk.Label(ventana, text="Seleccione un Doctor:", bg="#119DA4", fg="#3C372B",
+                         font=("Montserrat", 25, "bold italic"))
+        label.grid(row=0, column=0, pady=5)
+
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"), relief="flat", bd=2)
+        listbox.grid(row=2, column=0, pady=5)
+        datos = self.controlador_doctor.obtener_doctores()
+        datostemp = []
+        if datos != []:
+            for dato in datos:
+                dato = f"{dato.get_idDoctor()}, Nombre: {dato.get_nombreDoctor()} "
+                listbox.insert(tk.END, dato)
+                datostemp.append(dato)
+        else:
+            listbox.insert(tk.END, "No hay Doctores para mostrar")
+
+        def del_cita():
+
+            indice = listbox.curselection()
+
+            if indice != ():
+                if messagebox.askokcancel("Advertencia ¿Desea eliminar al doctor?", message=", ".join(listbox.get(i) for i in indice)):
+                    datos = self.controlador_citas.obtener_citas()
+                    for idx in indice:
+                        dato = datostemp[idx]
+                        dato.split(",")
+                        id = dato[0]
+
+                self.db.cursor.execute("sp_GestionarDoctores @idDoctor = ? , @idEspecialidad = null, @nombreDoctor = null, @contacto = null", (id))
+                self.db.conn.commit()
+                messagebox.showinfo("Éxito", "Doctor Eliminado Exitosamente.")
+                ventana.destroy()
+
+        boton_registrar = tk.Button(ventana, text="   Eliminar Doctor", command=del_cita, bg="white", fg="#3C372B",
+                                    font=("Montserrat", 15, "bold italic"), width=225, height=30, compound="left", image=self.imagen_eliminar)
+        boton_registrar.grid(row=5, column=0, pady=5)
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+    def abrir_ventana_ver_doctor(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Eliminar Doctor")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 1000, 500)
+
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"), relief="flat", bd=2)
+        listbox.grid(row=2, column=0, pady=5)
+        datos = self.controlador_doctor.obtener_doctores()
+        datostemp = []
+        if datos != []:
+            for dato in datos:
+                dato = f"{dato.get_idDoctor()}, Nombre: {dato.get_nombreDoctor()}, Contacto: {dato.get_contacto()}, Especialidad: {dato.get_idEspecialidad()} "
+                listbox.insert(tk.END, dato)
+                datostemp.append(dato)
+        else:
+            listbox.insert(tk.END, "No hay Doctores para mostrar")
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+
+    def abrir_ventana_especialidad(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Especialidades")
+        ventana.config(bg="#119DA4")
+        label = tk.Label(ventana, text="Especialidades", font=("Montserrat", 60, "bold italic"), fg="#3C372B",
+                         bg="#119DA4", compound="center")
+        label.pack(pady=10)
+        self.centrar_ventana(ventana, 600, 500)
+
+        button1 = tk.Button(ventana, text="  Agregar Especialidad", command=self.abrir_ventana_registrar_especialidad, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_agregar)
+        button2 = tk.Button(ventana, text="  Eliminar Especialidades", command=self.abrir_ventana_eliminar_especialidad, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_eliminar)
+        button3 = tk.Button(ventana, text="  Listar Especialidades", command=self.abrir_ventana_ver_especialidad, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_listar)
+        button4 = tk.Button(ventana, text="  Modificar Especialidad", command=self.abrir_ventana_modificar_especialidad, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_listar)
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white", width=35, height=35,
+                                   compound="center", image=self.imagen_regresar)
+        button3.pack(pady=10)
+        button1.pack(pady=10)
+        button4.pack(pady=10)
+        button2.pack(pady=10)
+
+        boton_regresar.pack(pady=10, padx=10, anchor="se")
+    def abrir_ventana_ver_especialidad(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Ver Especialidades")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 1124, 500)
+
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"), relief="flat", bd=2)
+        listbox.grid(row=2, column=0, pady=5)
+        datos = self.controlador_doctor.obtener_especialidades()
+        datostemp = []
+        if datos != []:
+            for dato in datos:
+                dato = f"{dato.get_idEspecialidad()}.- Especialidad: {dato.get_nombreEspecialidad()}"
+                listbox.insert(tk.END, dato)
+                datostemp.append(dato)
+        else:
+            listbox.insert(tk.END, "No hay Especialidades para mostrar")
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+    def abrir_ventana_eliminar_especialidad(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Ver Especialidades")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 1124, 500)
+
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"),
+                             relief="flat", bd=2)
+        listbox.grid(row=2, column=0, pady=5)
+        datos = self.controlador_doctor.obtener_especialidades()
+        datostemp = []
+        if datos != []:
+            for dato in datos:
+                dato = f"{dato.get_idEspecialidad()}.- Especialidad: {dato.get_nombreEspecialidad()}"
+                listbox.insert(tk.END, dato)
+                datostemp.append(dato)
+        else:
+            listbox.insert(tk.END, "No hay Especialidades para mostrar")
+
+        def del_esp():
+
+            indice = listbox.curselection()
+
+            if indice != ():
+                if messagebox.askokcancel("Advertencia ¿Desea eliminar la cita?", message=", ".join(listbox.get(i) for i in indice)):
+                    datos = self.controlador_citas.obtener_citas()
+                    for idx in indice:
+                        dato = datostemp[idx]
+                        dato.split(",")
+                        id = dato[0]
+
+                self.db.cursor.execute("EXEC sp_GestionarEspecialidad @idEspecialidad = ?, @nombreEspecialidad = null, @descripcionEspecialidad = null", (id))
+                self.db.conn.commit()
+                messagebox.showinfo("Éxito", "Cita Eliminada Exitosamente.")
+                ventana.destroy()
+
+        boton_registrar = tk.Button(ventana, text="   Eliminar Cita", command=del_esp, bg="white", fg="#3C372B",
+                                    font=("Montserrat", 20, "bold italic"), width=225, height=30, compound="left", image=self.imagen_eliminar)
+        boton_registrar.grid(row=5, column=0, pady=5)
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
                                    compound="center", image=self.imagen_regresar)
         boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
     def abrir_ventana_registrar_especialidad(self):
@@ -249,13 +668,99 @@ class GestionMedicaApp:
                 messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
 
         boton_registrar = tk.Button(ventana, text="   Registrar Especialidad", command=add_esp, bg="white", fg="#3C372B",
-                                    font=("Times New Roman", 20, "bold italic"), width=325, height=30, compound="left", image=self.imagen_especialidad)
+                                    font=("Montserrat", 20, "bold italic"), width=325, height=30, compound="left", image=self.imagen_especialidad)
         boton_registrar.grid(row=5, column=1)
 
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
-                                   fg="#3C372B", font=("Times New Roman", 20, "bold italic"), width=25, height=25,
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
                                    compound="center", image=self.imagen_regresar)
         boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+    def abrir_ventana_modificar_especialidad(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Modificar Especialidad")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 750, 300)
+
+        label_id = tk.Label(ventana, text="ID Especialidad:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_id.grid(row=0, column=0, padx=10, pady=10)
+
+        entry_id = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_id.grid(row=0, column=1, padx=5)
+
+        label_nombre = tk.Label(ventana, text="Nombre de la Especialidad:", bg="#119DA4", fg="#3C372B",
+                                font=("Montserrat", 20, "bold italic"))
+        label_nombre.grid(row=1, column=0, padx=10, pady=10)
+
+        entry_nombre = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_nombre.grid(row=1, column=1, padx=5)
+
+        label_des = tk.Label(ventana, text="Descripcion:", bg="#119DA4", fg="#3C372B",
+                             font=("Montserrat", 20, "bold italic"))
+        label_des.grid(row=2, column=0, padx=10, pady=10)
+
+        entry_des = tk.Entry(ventana, width=27, fg="#3C372B", font=("Montserrat", 12, "italic"), relief="flat", bd=2)
+        entry_des.grid(row=2, column=1, padx=5)
+
+        def add_esp():
+            id = entry_id.get()
+            nombre = entry_nombre.get()
+            des = entry_des.get()
+
+            if nombre and des and id:
+                try:
+                    self.db.cursor.execute(
+                        "EXEC sp_GestionarEspecialidad @idEspecialidad = ?, @nombreEspecialidad = ?, @descripcionEspecialidad = ?",
+                        (id, nombre, des))
+                    self.db.cursor.commit()
+                    messagebox.showinfo("Éxito", "Especialidad modificada exitosamente.")
+                except Exception as e:
+                    messagebox.showerror("Error", f"Error al modificar especialidad: {e}")
+            else:
+                messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
+
+        boton_registrar = tk.Button(ventana, text="   Modificar Especialidad", command=add_esp, bg="white",
+                                    fg="#3C372B",
+                                    font=("Montserrat", 20, "bold italic"), width=325, height=30, compound="left",
+                                    image=self.imagen_especialidad)
+        boton_registrar.grid(row=5, column=1)
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+
+
+    def abrir_ventana_tratamient(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Tratamientos")
+        ventana.config(bg="#119DA4")
+        label = tk.Label(ventana, text="Tratamientos", font=("Montserrat", 60, "bold italic"), fg="#3C372B",
+                         bg="#119DA4", compound="center")
+        label.pack(pady=10)
+        self.centrar_ventana(ventana, 600, 500)
+
+        button1 = tk.Button(ventana, text="  Agregar Tratamiento", command=self.abrir_ventana_registrar_especialidad, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_agregar)
+        button2 = tk.Button(ventana, text="  Eliminar Tratamiento", command=self.abrir_ventana_eliminar_tratamiento, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_eliminar)
+        button3 = tk.Button(ventana, text="  Listar Tratamientos", command=self.abrir_ventana_ver_tratamiento, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_listar)
+        button4 = tk.Button(ventana, text="  Modificar Tratamiento", command=self.abrir_ventana_modificar_especialidad, bg="white", fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_listar)
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white", width=35, height=35,
+                                   compound="center", image=self.imagen_regresar)
+        button3.pack(pady=10)
+        button1.pack(pady=10)
+        button4.pack(pady=10)
+        button2.pack(pady=10)
+
+        boton_regresar.pack(pady=10, padx=10, anchor="se")
+
     def abrir_ventana_registrar_tratamiento(self):
         ventana = Toplevel(self.root)
         ventana.title("Registrar Tratamiento")
@@ -285,33 +790,105 @@ class GestionMedicaApp:
                 messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
 
         boton_registrar = tk.Button(ventana, text="   Registrar Tratamiento", command=add_tra, bg="white", fg="#3C372B",
-                                    font=("Times New Roman", 20, "bold italic"), width=325, height=30, compound="left", image=self.imagen_tratamiento)
+                                    font=("Montserrat", 20, "bold italic"), width=325, height=30, compound="left", image=self.imagen_tratamiento)
         boton_registrar.grid(row=5, column=1)
 
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
-                                   fg="#3C372B", font=("Times New Roman", 20, "bold italic"), width=25, height=25,
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+
+    def abrir_ventana_ver_tratamiento(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Ver Especialidades")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 1124, 500)
+
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"), relief="flat", bd=2)
+        listbox.grid(row=2, column=0, pady=5)
+        datos = self.controlador_citas.obtener_Tratamiento()
+        datostemp = []
+        if datos != []:
+            for dato in datos:
+                dato = f"{dato.get_idTratamiento()}.- Especialidad: {dato.get_nombreTratamiento()}"
+                listbox.insert(tk.END, dato)
+                datostemp.append(dato)
+        else:
+            listbox.insert(tk.END, "No hay Especialidades para mostrar")
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+
+    def abrir_ventana_eliminar_tratamiento(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Ver Tratamientos")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 1124, 500)
+
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"),
+                             relief="flat", bd=2)
+        listbox.grid(row=2, column=0, pady=5)
+        datos = self.controlador_citas.obtener_Tratamiento()
+        datostemp = []
+        if datos != []:
+            for dato in datos:
+                dato = f"{dato.get_idTratamiento()}, Tratamiento: {dato.get_nombreTratamiento()}"
+                listbox.insert(tk.END, dato)
+                datostemp.append(dato)
+        else:
+            listbox.insert(tk.END, "No hay Tratamientos para mostrar")
+
+        def del_esp():
+
+            indice = listbox.curselection()
+
+            if indice != ():
+                if messagebox.askokcancel("Advertencia ¿Desea eliminar el Tratamiento?", message=", ".join(listbox.get(i) for i in indice)):
+                    datos = self.controlador_citas.obtener_citas()
+                    for idx in indice:
+                        dato = datostemp[idx]
+                        dato = dato.split(",")
+                        id = dato[0]
+
+                self.db.cursor.execute("EXEC sp_GestionarTratamiento @idTratamiento = ?, @nombreTratamiento = null", (id))
+                self.db.conn.commit()
+                messagebox.showinfo("Éxito", "Tratamiento Eliminado Exitosamente.")
+                ventana.destroy()
+
+        boton_registrar = tk.Button(ventana, text="   Eliminar Tratamiento", command=del_esp, bg="white", fg="#3C372B",
+                                    font=("Montserrat", 12, "bold italic"), width=225, height=30, compound="left", image=self.imagen_eliminar)
+        boton_registrar.grid(row=5, column=0, pady=5)
+
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
                                    compound="center", image=self.imagen_regresar)
         boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
     def abrir_ventana_citas(self):
         ventana = Toplevel(self.root)
         ventana.title("Citas")
         ventana.config(bg="#119DA4")
-        label = tk.Label(ventana, text="Cita", font=("Times New Roman", 60, "bold italic"), fg="#3C372B",
+        label = tk.Label(ventana, text="Cita", font=("Montserrat", 60, "bold italic"), fg="#3C372B",
                          bg="#119DA4", compound="center")
         label.pack(pady=10)
-        self.centrar_ventana(ventana, 500, 430)
+        self.centrar_ventana(ventana, 500, 600)
 
         button1 = tk.Button(ventana, text="  Crear Cita", command=self.abrir_ventana_registrar_cita, bg="white", fg="#3C372B",
-                            font=("Times New Roman", 20, "bold italic"), width=340, height=50, compound="left",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_agregar)
         button2 = tk.Button(ventana, text="  Eliminar Cita", command=self.abrir_ventana_eliminar_cita, bg="white", fg="#3C372B",
-                            font=("Times New Roman", 20, "bold italic"), width=340, height=50, compound="left",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_eliminar)
         button3 = tk.Button(ventana, text="  Listar Citas", command=self.abrir_ventana_ver_cita, bg="white", fg="#3C372B",
-                            font=("Times New Roman", 20, "bold italic"), width=340, height=50, compound="left",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_listar)
         button4 = tk.Button(ventana, text="  Modificar Cita", command=self.abrir_ventana_modificar_cita, bg="white", fg="#3C372B",
-                            font=("Times New Roman", 20, "bold italic"), width=340, height=50, compound="left",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
+                            image=self.imagen_listar)
+        button5 = tk.Button(ventana, text="  Historial Cita", command=self.abrir_ventana_ver_historico_cita, bg="white",
+                            fg="#3C372B",
+                            font=("Montserrat", 20, "bold italic"), width=340, height=50, compound="left",
                             image=self.imagen_listar)
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white", width=35, height=35,
                                    compound="center", image=self.imagen_regresar)
@@ -319,6 +896,7 @@ class GestionMedicaApp:
         button1.pack(pady=10)
         button4.pack(pady=10)
         button2.pack(pady=10)
+        button5.pack(pady=10)
 
         boton_regresar.pack(pady=10, padx=10, anchor="se")
     def abrir_ventana_registrar_cita(self):
@@ -394,11 +972,11 @@ class GestionMedicaApp:
                 messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
 
         boton_registrar = tk.Button(ventana, text="   Registrar Cita", command=add_cita, bg="white", fg="#3C372B",
-                                    font=("Times New Roman", 20, "bold italic"), width=225, height=30, compound="left", image=self.imagen_cita)
+                                    font=("Montserrat", 20, "bold italic"), width=225, height=30, compound="left", image=self.imagen_cita)
         boton_registrar.grid(row=5, column=1)
 
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
-                                   fg="#3C372B", font=("Times New Roman", 20, "bold italic"), width=25, height=25,
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
                                    compound="center", image=self.imagen_regresar)
         boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
     def abrir_ventana_modificar_cita(self):
@@ -483,11 +1061,11 @@ class GestionMedicaApp:
                 messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
 
         boton_registrar = tk.Button(ventana, text="   Modificar Cita", command=add_cita, bg="white", fg="#3C372B",
-                                    font=("Times New Roman", 20, "bold italic"), width=225, height=30, compound="left", image=self.imagen_cita)
+                                    font=("Montserrat", 20, "bold italic"), width=225, height=30, compound="left", image=self.imagen_cita)
         boton_registrar.grid(row=5, column=1)
 
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
-                                   fg="#3C372B", font=("Times New Roman", 20, "bold italic"), width=25, height=25,
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
                                    compound="center", image=self.imagen_regresar)
         boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
     def abrir_ventana_eliminar_cita(self):
@@ -497,16 +1075,16 @@ class GestionMedicaApp:
         self.centrar_ventana(ventana, 1124, 500)
 
         label = tk.Label(ventana, text="Seleccione una cita:", bg="#119DA4", fg="#3C372B",
-                         font = ("Times New Roman", 25, "bold italic"))
+                         font=("Montserrat", 25, "bold italic"))
         label.grid(row=0, column=0, pady=5)
 
-        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Times New Roman", 15, "italic"), relief="flat", bd=2)
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"), relief="flat", bd=2)
         listbox.grid(row=2, column=0, pady=5)
         datos = self.controlador_citas.obtener_citas()
         datostemp = []
         if datos != []:
             for dato in datos:
-                dato = f"{dato}"
+                dato = f"El Paciente: {dato.get_idPaciente()}, tiene su cita el día: {dato.get_fechaCita()}, con El/la Dr(a): {dato.get_idDoctor()}"
                 listbox.insert(tk.END, dato)
                 datostemp.append(dato)
         else:
@@ -530,11 +1108,11 @@ class GestionMedicaApp:
                 ventana.destroy()
 
         boton_registrar = tk.Button(ventana, text="   Eliminar Cita", command=del_cita, bg="white", fg="#3C372B",
-                                    font=("Times New Roman", 20, "bold italic"), width=225, height=30, compound="left", image=self.imagen_eliminar)
+                                    font=("Montserrat", 20, "bold italic"), width=225, height=30, compound="left", image=self.imagen_eliminar)
         boton_registrar.grid(row=5, column=0, pady=5)
 
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
-                                   fg="#3C372B", font=("Times New Roman", 20, "bold italic"), width=25, height=25,
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
                                    compound="center", image=self.imagen_regresar)
         boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
     def abrir_ventana_ver_cita(self):
@@ -543,32 +1121,77 @@ class GestionMedicaApp:
         ventana.config(bg="#119DA4")
         self.centrar_ventana(ventana, 1124, 500)
 
-        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Times New Roman", 15, "italic"), relief="flat", bd=2)
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"), relief="flat", bd=2)
         listbox.grid(row=2, column=0, pady=5)
         datos = self.controlador_citas.obtener_citas()
         datostemp = []
         if datos != []:
             for dato in datos:
-                dato = f"{dato}"
+                dato = f"El Paciente: {dato.get_idPaciente()}, tiene su cita el día: {dato.get_fechaCita()}, con El/la Dr(a): {dato.get_idDoctor()}"
                 listbox.insert(tk.END, dato)
                 datostemp.append(dato)
         else:
             listbox.insert(tk.END, "No hay citas para mostrar")
 
         boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
-                                   fg="#3C372B", font=("Times New Roman", 20, "bold italic"), width=25, height=25,
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
                                    compound="center", image=self.imagen_regresar)
         boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+    def abrir_ventana_ver_historico_cita(self):
+        ventana = Toplevel(self.root)
+        ventana.title("Ver Citas")
+        ventana.config(bg="#119DA4")
+        self.centrar_ventana(ventana, 1400, 600)
+
+        label_paciente = tk.Label(ventana, text="Nombre del paciente:", bg="#119DA4", fg="#3C372B",
+                                  font=("Montserrat", 20, "bold italic"))
+        label_paciente.grid(row=0, column=0, padx=10, pady=10)
+
+        combo_pacientes = ttk.Combobox(ventana, state="readonly", width=27, font=("Montserrat", 12, "italic"))
+        combo_pacientes.grid(row=0, column=1, padx=5)
+        pacientes = self.controlador_paciente.obtener_paciente()
+        combo_pacientes['values'] = [pa.get_nombrePaciente() for pa in pacientes]
+        combo_pacientes.pacientes = pacientes
+
+        listbox = tk.Listbox(ventana, height=15, width=100, fg="#3C372B", font=("Montserrat", 15, "italic"),
+                             relief="flat", bd=2)
+        listbox.grid(row=2, column=0, pady=5)
+
+        def mostrar():
+            listbox.delete(0, tk.END)
+            paciente_nombre = combo_pacientes.get()
+            paciente = next((pa for pa in combo_pacientes.pacientes if pa.get_nombrePaciente() == paciente_nombre), None)
+            print(paciente)
+            if paciente:
+                datos = self.controlador_citas.obtener_citas_historico(paciente.get_idPaciente())
+                datostemp = []
+                if datos != []:
+                    for dato in datos:
+                        dato = f"{dato}"
+                        listbox.insert(tk.END, dato)
+                        datostemp.append(dato)
+                else:
+                    listbox.insert(tk.END, "No hay citas para mostrar")
+
+        boton_consulta = tk.Button(ventana, text="   Consultar Cita", command=mostrar, bg="white", fg="#3C372B",
+                                    font=("Montserrat", 20, "bold italic"), width=225, height=30, compound="left",
+                                    image=self.imagen_cita)
+        boton_consulta.grid(row=5, column=1)
+        boton_regresar = tk.Button(ventana, command=ventana.destroy, bg="white",
+                                   fg="#3C372B", font=("Montserrat", 20, "bold italic"), width=25, height=25,
+                                   compound="center", image=self.imagen_regresar)
+        boton_regresar.grid(row=5, column=0, pady=10, padx=10, sticky="w")
+
+
+
 def main():
-    # Configura los parámetros de conexión a MSSQL
-    server = 'DESKTOP-HMS6GDC\\SQLEXPRESS'
+    server = 'PC-DEV36'
     database = 'ProyectoCitasMedicas'
-    username = 'ADMIN'
-    password = 'ADMIN'
+    username = 'ADMINMH'
+    password = 'Marlon123'
 
     try:
         db = Database(server, database, username, password)
-
         app = GestionMedicaApp(root, db)
         root.mainloop()
     except Exception as e:

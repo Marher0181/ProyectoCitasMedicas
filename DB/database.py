@@ -1,5 +1,4 @@
 import pyodbc
-import Models.Paciente
 class Database:
     def __init__(self, server, database, username, password):
         try:
