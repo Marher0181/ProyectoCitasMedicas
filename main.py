@@ -63,14 +63,9 @@ class GestionMedicaApp:
         self.imagen_especialidad = tk.PhotoImage(file=r"Iconos\especialidad.png")
         self.imagen_tratamiento = tk.PhotoImage(file=r"Iconos\tratamiento.png")
         self.imagen_salir = tk.PhotoImage(file=r"Iconos\salir.png")
-        self.imagen_agregar_libro = tk.PhotoImage(file=r"Iconos\agregar-libro.png")
         self.imagen_agregar = tk.PhotoImage(file=r"Iconos\agregar.png")
-        self.imagen_buscar_libros = tk.PhotoImage(file=r"Iconos\buscar-libro.png")
         self.imagen_eliminar = tk.PhotoImage(file=r"Iconos\eliminar.png")
         self.imagen_listar = tk.PhotoImage(file=r"Iconos\listar.png")
-        self.imagen_registrar_usuario = tk.PhotoImage(file=r"Iconos\agregar-usuario.png")
-        self.imagen_prestar_libro = tk.PhotoImage(file=r"Iconos\prestar-libro.png")
-        self.imagen_devolver_libro = tk.PhotoImage(file=r"Iconos\devolver-libro.png")
         self.imagen_regresar = tk.PhotoImage(file=r"Iconos\regresar.png")
 
         button = tk.Button(root, text="  Cita", command=self.abrir_ventana_citas, bg="white", fg="#3C372B",
